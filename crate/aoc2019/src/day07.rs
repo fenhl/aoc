@@ -12,7 +12,6 @@ fn part1(input: &Program) -> isize {
         let mut value = 0;
         for phase in perm {
             let mut program = input.clone();
-            program.run().unwrap_input();
             program.run_with_input(phase).unwrap_input();
             value = program.run_with_input(value).unwrap_output();
         }
@@ -20,12 +19,25 @@ fn part1(input: &Program) -> isize {
     }).max().expect("no permutations")
 }
 
-/*
 #[aoc(day7, part2)]
-fn part2(input: &!) -> ! {
-    unimplemented!()
+fn part2(input: &Program) -> isize {
+    (5..10).permutations(5).map(|perm| {
+        let mut value = 0;
+        let mut amps = vec![input.clone(); 5];
+        for (phase, amp) in perm.into_iter().zip_eq(&mut amps) {
+            amp.run_with_input(phase).unwrap_input();
+        }
+        loop {
+            for amp in &mut amps {
+                match amp.run_with_input(value) {
+                    Event::Input => panic!("unexpected input request"),
+                    Event::Output(new_value) => value = new_value,
+                    Event::Halt => return value,
+                }
+            }
+        }
+    }).max().expect("no permutations")
 }
-*/
 
 #[test]
 fn ex0() {

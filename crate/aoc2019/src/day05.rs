@@ -9,7 +9,6 @@ pub fn gen(input: &str) -> Result<Program, ParseIntError> {
 #[aoc(day5, part1)]
 pub fn part1(input: &Program) -> isize {
     let mut program = input.clone();
-    program.run().unwrap_input();
     let mut last_output = program.run_with_input(1).unwrap_output();
     loop {
         match program.run() {
