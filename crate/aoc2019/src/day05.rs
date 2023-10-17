@@ -1,8 +1,5 @@
 #[allow(unused)] use aoc::prelude::*;
-use {
-    std::mem,
-    crate::intcode::Program,
-};
+use crate::intcode::*;
 
 #[aoc_generator(day5)]
 pub fn gen(input: &str) -> Result<Program, ParseIntError> {
@@ -12,21 +9,25 @@ pub fn gen(input: &str) -> Result<Program, ParseIntError> {
 #[aoc(day5, part1)]
 pub fn part1(input: &Program) -> isize {
     let mut program = input.clone();
-    program.input = Some(1);
-    let mut last_output = None;
-    while let Some(output) = program.run_until_output() {
-        if let Some(last) = mem::replace(&mut last_output, None) {
-            if last != 0 {
-                panic!("self-test failed");
+    program.run().unwrap_input();
+    let mut last_output = program.run_with_input(1).unwrap_output();
+    loop {
+        match program.run() {
+            Event::Input => panic!("unexpected input request"),
+            Event::Output(output) => {
+                if last_output != 0 {
+                    panic!("self-test failed")
+                }
+                last_output = output;
             }
+            Event::Halt => break,
         }
-        last_output = Some(output);
     }
-    last_output.expect("no output")
+    last_output
 }
 
 #[aoc(day5, part2)]
 pub fn part2(input: &Program) -> isize {
     let mut program = input.clone();
-    program.run_with_input(5).expect("no output")
+    program.run_with_input(5).unwrap_output()
 }

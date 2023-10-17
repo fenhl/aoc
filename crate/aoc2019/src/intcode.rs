@@ -90,19 +90,50 @@ impl Arg {
 
 enum InstrResult {
     MoveTo(usize),
-    Input(usize),
+    RequestInput,
+    ConsumeInput(usize),
     Output(isize, usize),
     Halt,
+}
+
+#[must_use]
+pub(crate) enum Event {
+    Input,
+    Output(isize),
+    Halt,
+}
+
+impl Event {
+    #[track_caller]
+    pub(crate) fn unwrap_halt(self) {
+        if !matches!(self, Self::Halt) {
+            panic!("expected halt")
+        }
+    }
+
+    #[track_caller]
+    pub(crate) fn unwrap_input(self) {
+        if !matches!(self, Self::Input) {
+            panic!("expected input request")
+        }
+    }
+
+    #[track_caller]
+    pub(crate) fn unwrap_output(self) -> isize {
+        if let Self::Output(output) = self {
+            output
+        } else {
+            panic!("no output")
+        }
+    }
 }
 
 #[derive(Clone, Index, IndexMut)]
 pub struct Program {
     #[index]
     #[index_mut]
-    pub(crate) memory: Vec<isize>,
+    memory: Vec<isize>,
     ip: usize,
-    pub(crate) input: Option<isize>,
-    output: Option<isize>,
 }
 
 impl Program {
@@ -110,8 +141,6 @@ impl Program {
         Program {
             memory,
             ip: 0,
-            input: None,
-            output: None,
         }
     }
 
@@ -122,13 +151,14 @@ impl Program {
         }
     }
 
-    fn apply_with_args(&mut self, instr: Instruction, args: Vec<Arg>) -> InstrResult {
+    fn apply_with_args(&mut self, instr: Instruction, args: Vec<Arg>, input: Option<isize>) -> InstrResult {
         match instr {
             Add => self.write(&args[2], args[0].read() + args[1].read()),
             Multiply => self.write(&args[2], args[0].read() * args[1].read()),
             Input => {
-                self.write(&args[0], self.input.expect("missing input"));
-                return InstrResult::Input(self.ip + 1 + instr.num_params())
+                let Some(input) = input else { return InstrResult::RequestInput };
+                self.write(&args[0], input);
+                return InstrResult::ConsumeInput(self.ip + 1 + instr.num_params())
             }
             Output => return InstrResult::Output(args[0].read(), self.ip + 1 + instr.num_params()),
             JumpIfTrue => if args[0].read() != 0 { return InstrResult::MoveTo(args[1].read() as usize) },
@@ -140,7 +170,7 @@ impl Program {
         InstrResult::MoveTo(self.ip + 1 + instr.num_params())
     }
 
-    fn step(&mut self) -> InstrResult {
+    fn step(&mut self, input: Option<isize>) -> InstrResult {
         let (mut modes, instr) = self[self.ip].div_rem(&100);
         let instr = Instruction::try_from(instr).expect(&format!("unknown instruction at position {}", self.ip));
         let raw_args = self[self.ip + 1..self.ip + 1 + instr.num_params()].to_vec();
@@ -150,80 +180,33 @@ impl Program {
             args.push(Arg::new(mode, raw_args[i], &self));
             modes = next_modes;
         }
-        self.apply_with_args(instr, args)
+        self.apply_with_args(instr, args, input)
     }
 
-    pub(crate) fn run(&mut self) -> Option<isize> {
+    fn run_inner(&mut self, mut input: Option<isize>) -> Event {
         loop {
-            match self.step() {
-                InstrResult::MoveTo(new_ip) | InstrResult::Input(new_ip) => self.ip = new_ip,
-                InstrResult::Output(output, new_ip) => {
-                    self.output = Some(output);
-                    self.ip = new_ip;
-                }
-                InstrResult::Halt => break,
-            }
-        }
-        self.output
-    }
-
-    pub(crate) fn run_with_input(&mut self, input: isize) -> Option<isize> {
-        self.input = Some(input);
-        self.run()
-    }
-
-    pub(crate) fn run_with_inputs(&mut self, inputs: impl IntoIterator<Item = isize>) -> Option<isize> {
-        let mut inputs = inputs.into_iter();
-        self.input = inputs.next();
-        loop {
-            match self.step() {
+            match self.step(input) {
                 InstrResult::MoveTo(new_ip) => self.ip = new_ip,
-                InstrResult::Input(new_ip) => {
+                InstrResult::RequestInput => break Event::Input,
+                InstrResult::ConsumeInput(new_ip) => {
                     self.ip = new_ip;
-                    self.input = inputs.next();
+                    input = None;
                 }
                 InstrResult::Output(output, new_ip) => {
-                    self.output = Some(output);
                     self.ip = new_ip;
+                    break Event::Output(output)
                 }
-                InstrResult::Halt => break,
-            }
-        }
-        self.output
-    }
-
-    pub(crate) fn run_until_output(&mut self) -> Option<isize> {
-        loop {
-            match self.step() {
-                InstrResult::MoveTo(new_ip) | InstrResult::Input(new_ip) => self.ip = new_ip,
-                InstrResult::Output(output, new_ip) => {
-                    self.output = Some(output);
-                    self.ip = new_ip;
-                    break Some(output)
-                }
-                InstrResult::Halt => break None,
+                InstrResult::Halt => break Event::Halt,
             }
         }
     }
 
-    pub(crate) fn run_with_inputs_until_output(&mut self, inputs: impl IntoIterator<Item = isize>) -> Option<isize> {
-        let mut inputs = inputs.into_iter();
-        self.input = inputs.next();
-        loop {
-            match self.step() {
-                InstrResult::MoveTo(new_ip) => self.ip = new_ip,
-                InstrResult::Input(new_ip) => {
-                    self.ip = new_ip;
-                    self.input = inputs.next();
-                }
-                InstrResult::Output(output, new_ip) => {
-                    self.output = Some(output);
-                    self.ip = new_ip;
-                    break Some(output)
-                }
-                InstrResult::Halt => break None,
-            }
-        }
+    pub(crate) fn run(&mut self) -> Event {
+        self.run_inner(None)
+    }
+
+    pub(crate) fn run_with_input(&mut self, input: isize) -> Event {
+        self.run_inner(Some(input))
     }
 }
 

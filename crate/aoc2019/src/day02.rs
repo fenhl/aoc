@@ -9,7 +9,7 @@ pub fn gen(input: &str) -> Result<Program, ParseIntError> {
 fn replace_and_run(program: &mut Program, noun: isize, verb: isize) -> isize {
     program[1] = noun;
     program[2] = verb;
-    program.run();
+    program.run().unwrap_halt();
     program[0]
 }
 
@@ -33,34 +33,34 @@ pub fn part2(input: &Program) -> isize {
 #[test]
 fn ex0() {
     let mut program = Program::new(vec![1,9,10,3,2,3,11,0,99,30,40,50]);
-    program.run();
-    assert_eq!(program.memory, vec![3500,9,10,70,2,3,11,0,99,30,40,50]);
+    program.run().unwrap_halt();
+    assert_eq!(program[..], vec![3500,9,10,70,2,3,11,0,99,30,40,50]);
 }
 
 #[test]
 fn ex1() {
     let mut program = Program::new(vec![1,0,0,0,99]);
-    program.run();
-    assert_eq!(program.memory, vec![2,0,0,0,99]);
+    program.run().unwrap_halt();
+    assert_eq!(program[..], vec![2,0,0,0,99]);
 }
 
 #[test]
 fn ex2() {
     let mut program = Program::new(vec![2,3,0,3,99]);
-    program.run();
-    assert_eq!(program.memory, vec![2,3,0,6,99]);
+    program.run().unwrap_halt();
+    assert_eq!(program[..], vec![2,3,0,6,99]);
 }
 
 #[test]
 fn ex3() {
     let mut program = Program::new(vec![2,4,4,5,99,0]);
-    program.run();
-    assert_eq!(program.memory, vec![2,4,4,5,99,9801]);
+    program.run().unwrap_halt();
+    assert_eq!(program[..], vec![2,4,4,5,99,9801]);
 }
 
 #[test]
 fn ex4() {
     let mut program = Program::new(vec![1,1,1,4,99,5,6,0,99]);
-    program.run();
-    assert_eq!(program.memory, vec![30,1,1,4,2,5,6,0,99]);
+    program.run().unwrap_halt();
+    assert_eq!(program[..], [30,1,1,4,2,5,6,0,99]);
 }

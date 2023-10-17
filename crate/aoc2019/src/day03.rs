@@ -48,7 +48,7 @@ pub enum WirePartFromStrErr {
 }
 
 impl fmt::Display for WirePartFromStrErr {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             WirePartFromStrErr::LengthFormat(e) => e.fmt(f),
             WirePartFromStrErr::MissingDirection => write!(f, "empty wire part string, expected direction"),

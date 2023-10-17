@@ -1,5 +1,5 @@
 #[allow(unused)] use aoc::prelude::*;
-use crate::intcode::Program;
+use crate::intcode::*;
 
 #[aoc_generator(day7)]
 fn gen(input: &str) -> Result<Program, ParseIntError> {
@@ -12,7 +12,9 @@ fn part1(input: &Program) -> isize {
         let mut value = 0;
         for phase in perm {
             let mut program = input.clone();
-            value = program.run_with_inputs([phase, value]).expect("program did not generate output");
+            program.run().unwrap_input();
+            program.run_with_input(phase).unwrap_input();
+            value = program.run_with_input(value).unwrap_output();
         }
         value
     }).max().expect("no permutations")

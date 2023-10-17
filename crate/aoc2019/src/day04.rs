@@ -14,7 +14,7 @@ pub enum GenError {
 }
 
 impl fmt::Display for GenError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             GenError::NumSeps => write!(f, "expected one hyphen, found none or more than one"),
             GenError::ParseInt(e) => e.fmt(f)
