@@ -90,6 +90,7 @@ impl Arg {
 
 enum InstrResult {
     MoveTo(usize),
+    Input(usize),
     Output(isize, usize),
     Halt,
 }
@@ -98,14 +99,14 @@ enum InstrResult {
 pub struct Program {
     #[index]
     #[index_mut]
-    memory: Vec<isize>,
+    pub(crate) memory: Vec<isize>,
     ip: usize,
     pub(crate) input: Option<isize>,
     output: Option<isize>,
 }
 
 impl Program {
-    fn new(memory: Vec<isize>) -> Program {
+    pub(crate) fn new(memory: Vec<isize>) -> Program {
         Program {
             memory,
             ip: 0,
@@ -125,7 +126,10 @@ impl Program {
         match instr {
             Add => self.write(&args[2], args[0].read() + args[1].read()),
             Multiply => self.write(&args[2], args[0].read() * args[1].read()),
-            Input => self.write(&args[0], self.input.expect("missing input")),
+            Input => {
+                self.write(&args[0], self.input.expect("missing input"));
+                return InstrResult::Input(self.ip + 1 + instr.num_params())
+            }
             Output => return InstrResult::Output(args[0].read(), self.ip + 1 + instr.num_params()),
             JumpIfTrue => if args[0].read() != 0 { return InstrResult::MoveTo(args[1].read() as usize) },
             JumpIfFalse => if args[0].read() == 0 { return InstrResult::MoveTo(args[1].read() as usize) },
@@ -152,7 +156,7 @@ impl Program {
     pub(crate) fn run(&mut self) -> Option<isize> {
         loop {
             match self.step() {
-                InstrResult::MoveTo(new_ip) => self.ip = new_ip,
+                InstrResult::MoveTo(new_ip) | InstrResult::Input(new_ip) => self.ip = new_ip,
                 InstrResult::Output(output, new_ip) => {
                     self.output = Some(output);
                     self.ip = new_ip;
@@ -168,10 +172,50 @@ impl Program {
         self.run()
     }
 
-    pub(crate) fn run_until_output(&mut self) -> Option<isize> {
+    pub(crate) fn run_with_inputs(&mut self, inputs: impl IntoIterator<Item = isize>) -> Option<isize> {
+        let mut inputs = inputs.into_iter();
+        self.input = inputs.next();
         loop {
             match self.step() {
                 InstrResult::MoveTo(new_ip) => self.ip = new_ip,
+                InstrResult::Input(new_ip) => {
+                    self.ip = new_ip;
+                    self.input = inputs.next();
+                }
+                InstrResult::Output(output, new_ip) => {
+                    self.output = Some(output);
+                    self.ip = new_ip;
+                }
+                InstrResult::Halt => break,
+            }
+        }
+        self.output
+    }
+
+    pub(crate) fn run_until_output(&mut self) -> Option<isize> {
+        loop {
+            match self.step() {
+                InstrResult::MoveTo(new_ip) | InstrResult::Input(new_ip) => self.ip = new_ip,
+                InstrResult::Output(output, new_ip) => {
+                    self.output = Some(output);
+                    self.ip = new_ip;
+                    break Some(output)
+                }
+                InstrResult::Halt => break None,
+            }
+        }
+    }
+
+    pub(crate) fn run_with_inputs_until_output(&mut self, inputs: impl IntoIterator<Item = isize>) -> Option<isize> {
+        let mut inputs = inputs.into_iter();
+        self.input = inputs.next();
+        loop {
+            match self.step() {
+                InstrResult::MoveTo(new_ip) => self.ip = new_ip,
+                InstrResult::Input(new_ip) => {
+                    self.ip = new_ip;
+                    self.input = inputs.next();
+                }
                 InstrResult::Output(output, new_ip) => {
                     self.output = Some(output);
                     self.ip = new_ip;

@@ -10,7 +10,7 @@ This repository contains my solutions to some of the [Advent of Code](https://ad
 |Day 4|⭐⭐||||⭐⭐|⭐⭐|⭐⭐||
 |Day 5|||||⭐⭐|⭐⭐|||
 |Day 6|||||⭐⭐|⭐⭐|⭐⭐||
-|Day 7||||||⭐⭐|||
+|Day 7|||||⭐|⭐⭐|||
 |Day 8||||||⭐⭐|||
 |Day 9||||||⭐⭐|||
 |Day 10||||||⭐⭐|⭐⭐||

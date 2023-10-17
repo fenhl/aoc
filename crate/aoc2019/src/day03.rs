@@ -131,7 +131,7 @@ pub fn part2(input: &[Wire]) -> u32 {
 fn ex0() -> Result<(), WirePartFromStrErr> {
     let w1 = parse_wire("R8,U5,L5,D3")?;
     let w2 = parse_wire("U7,R6,D4,L4")?;
-    assert_eq!(min_distance(w1, w2), Some(6));
+    assert_eq!(min_distance(&w1, &w2), Some(6));
     Ok(())
 }
 
@@ -139,7 +139,7 @@ fn ex0() -> Result<(), WirePartFromStrErr> {
 fn ex1() -> Result<(), WirePartFromStrErr> {
     let w1 = parse_wire("R75,D30,R83,U83,L12,D49,R71,U7,L72")?;
     let w2 = parse_wire("U62,R66,U55,R34,D71,R55,D58,R83")?;
-    assert_eq!(min_distance(w1, w2), Some(159));
+    assert_eq!(min_distance(&w1, &w2), Some(159));
     Ok(())
 }
 
@@ -147,6 +147,6 @@ fn ex1() -> Result<(), WirePartFromStrErr> {
 fn ex2() -> Result<(), WirePartFromStrErr> {
     let w1 = parse_wire("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51")?;
     let w2 = parse_wire("U98,R91,D20,R16,D67,R40,U7,R15,U6,R7")?;
-    assert_eq!(min_distance(w1, w2), Some(135));
+    assert_eq!(min_distance(&w1, &w2), Some(135));
     Ok(())
 }
