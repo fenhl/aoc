@@ -1,5 +1,4 @@
 #[allow(unused)] use aoc::prelude::*;
-
 use hashbag::HashBag;
 
 #[aoc_generator(day6)]
