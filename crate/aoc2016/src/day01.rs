@@ -68,9 +68,19 @@ fn part1(input: &[(Turn, u32)]) -> u32 {
     pos.into_iter().map(|coord| coord.unsigned_abs()).sum()
 }
 
-/*
 #[aoc(day1, part2)]
-fn part2(input: &!) -> ! {
-    unimplemented!()
+fn part2(input: &[(Turn, u32)]) -> u32 {
+    let mut pos = [0, 0];
+    let mut visited = collect![as HashSet<_>: pos];
+    let mut facing = North;
+    'outer: for &(turn, distance) in input {
+        facing += turn;
+        for _ in 0..distance {
+            pos += facing;
+            if !visited.insert(pos) {
+                break 'outer
+            }
+        }
+    }
+    pos.into_iter().map(|coord| coord.unsigned_abs()).sum()
 }
-*/
