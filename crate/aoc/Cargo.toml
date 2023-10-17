@@ -7,4 +7,5 @@ publish = false
 [dependencies]
 collect-mac = "0.1.0"
 itertools = "0.11.0"
+lazy-regex = "3.0.2"
 serde = { version = "1.0.189", features = ["derive"] }
