@@ -16,6 +16,7 @@ name = "aoc"
 version = "0.1.0"
 dependencies = [
  "collect-mac",
+ "itermore",
  "itertools",
  "lazy-regex",
  "serde",
@@ -62,6 +63,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "arrays"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2dbdbb2877d26e0647c6b8125802b2ecf2dc2a28d864dde41e6f9b9a54da08fe"
+
+[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -97,6 +104,24 @@ name = "either"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a26ae43d7bcc3b814de94796a5e736d4029efb0ee900c12e2d54c993ad1a1e07"
+
+[[package]]
+name = "iterchunks"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ceb61464343bc874be283540bf6bb148d6e5b61023bc5acbb9f969b56c806780"
+dependencies = [
+ "arrays",
+]
+
+[[package]]
+name = "itermore"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0331e230609e456fccf9d3b3d4f273a1b3f6b601ed37e943dc197fe5d24bb4da"
+dependencies = [
+ "iterchunks",
+]
 
 [[package]]
 name = "itertools"

@@ -15,6 +15,7 @@ pub use {
         str::FromStr,
     },
     collect_mac::collect,
+    itermore::IterArrayChunks as _,
     itertools::Itertools as _,
     lazy_regex::{
         self,
