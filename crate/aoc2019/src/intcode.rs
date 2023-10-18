@@ -20,6 +20,7 @@ enum Instruction {
     JumpIfFalse,
     LessThan,
     Equals,
+    AdjustRelBase,
     Halt,
 }
 
@@ -36,6 +37,7 @@ impl Instruction {
             JumpIfFalse => 2,
             LessThan => 3,
             Equals => 3,
+            AdjustRelBase => 1,
             Halt => 0,
         }
     }
@@ -54,6 +56,7 @@ impl TryFrom<isize> for Instruction {
             6 => Ok(JumpIfFalse),
             7 => Ok(LessThan),
             8 => Ok(Equals),
+            9 => Ok(AdjustRelBase),
             99 => Ok(Halt),
             _ => Err(opcode),
         }
@@ -66,25 +69,43 @@ enum Arg {
         value: isize,
     },
     Immediate(isize),
+    Relative {
+        pos: isize,
+        value: isize,
+    },
 }
 
 impl Arg {
-    fn new(mode: isize, raw_arg: isize, program: &Program) -> Arg {
+    fn new(mode: isize, raw_arg: isize, program: &mut Program) -> Self {
         match mode {
-            0 => Arg::Pos {
-                pos: raw_arg as usize,
-                value: program[raw_arg as usize],
-            },
-            1 => Arg::Immediate(raw_arg),
+            0 => {
+                let pos = raw_arg as usize;
+                if program.memory.len() <= pos {
+                    program.memory.resize(pos + 1, 0);
+                }
+                Self::Pos {
+                    value: program[pos],
+                    pos,
+                }
+            }
+            1 => Self::Immediate(raw_arg),
+            2 => {
+                let pos = (program.rel_base + raw_arg) as usize;
+                if program.memory.len() <= pos {
+                    program.memory.resize(pos + 1, 0);
+                }
+                Self::Relative {
+                    pos: raw_arg,
+                    value: program[pos],
+                }
+            }
             _ => panic!("unknown argument mode: {mode}"),
         }
     }
 
     fn read(&self) -> isize {
-        match *self {
-            Arg::Pos { value, .. } => value,
-            Arg::Immediate(value) => value,
-        }
+        let (Self::Pos { value, .. } | Self::Immediate(value) | Self::Relative { value, .. }) = *self;
+        value
     }
 }
 
@@ -134,6 +155,7 @@ pub struct Program {
     #[index_mut]
     memory: Vec<isize>,
     ip: usize,
+    rel_base: isize,
 }
 
 impl Program {
@@ -141,13 +163,18 @@ impl Program {
         Program {
             memory,
             ip: 0,
+            rel_base: 0,
         }
     }
 
     fn write(&mut self, arg: &Arg, value: isize) {
         match *arg {
-            Arg::Pos { pos, .. } => { self[pos] = value; }
+            Arg::Pos { pos, .. } => self[pos] = value,
             Arg::Immediate(_) => panic!("can't write to immediate-mode argument"),
+            Arg::Relative { pos, .. } => {
+                let addr = self.rel_base + pos;
+                self[addr as usize] = value;
+            }
         }
     }
 
@@ -165,6 +192,7 @@ impl Program {
             JumpIfFalse => if args[0].read() == 0 { return InstrResult::MoveTo(args[1].read() as usize) },
             LessThan => self.write(&args[2], if args[0].read() < args[1].read() { 1 } else { 0 }),
             Equals => self.write(&args[2], if args[0].read() == args[1].read() { 1 } else { 0 }),
+            AdjustRelBase => self.rel_base += args[0].read(),
             Halt => return InstrResult::Halt,
         }
         InstrResult::MoveTo(self.ip + 1 + instr.num_params())
@@ -177,7 +205,7 @@ impl Program {
         let mut args = Vec::default();
         for i in 0..instr.num_params() {
             let (next_modes, mode) = modes.div_rem(&10);
-            args.push(Arg::new(mode, raw_args[i], &self));
+            args.push(Arg::new(mode, raw_args[i], self));
             modes = next_modes;
         }
         self.apply_with_args(instr, args, input)
