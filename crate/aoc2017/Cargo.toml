@@ -1,0 +1,11 @@
+[package]
+name = "aoc2017"
+version = "0.1.0"
+authors = ["Fenhl <fenhl@fenhl.net>"]
+edition = "2021"
+publish = false
+
+[dependencies]
+aoc = { version = "0.1.0", path = "../aoc" }
+aoc-runner = "0.3.0"
+aoc-runner-derive = "0.3.0"
