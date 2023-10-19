@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 collect-mac = "0.1.0"
-itermore = { version = "0.5.0", default-features = false, features = ["array_chunks"] }
+itermore = { version = "0.5.0", default-features = false, features = ["array_chunks", "array_windows"] }
 itertools = "0.11.0"
 lazy-regex = "3.0.2"
 serde = { version = "1.0.189", features = ["derive"] }
