@@ -10,7 +10,7 @@ This repository contains my solutions to some of the [Advent of Code](https://ad
 |Day 4 |&#x2B50;&#x2B50;|                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |
 |Day 5 |&#x2B50;&#x2B50;|                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |                |
 |Day 6 |&#x2B50;&#x2B50;|                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |
-|Day 7 |                |                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |                |
+|Day 7 |&#x2B50;&#x2B50;|                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |                |
 |Day 8 |                |                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |                |
 |Day 9 |                |                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |                |
 |Day 10|                |                |                |                |                |&#x2B50;&#x2B50;|&#x2B50;&#x2B50;|                |                |

@@ -5,7 +5,10 @@ pub use {
             HashMap,
             HashSet,
         },
-        convert::identity,
+        convert::{
+            Infallible as Never,
+            identity,
+        },
         iter,
         num::ParseIntError,
         ops::{
@@ -15,6 +18,7 @@ pub use {
         str::FromStr,
     },
     collect_mac::collect,
+    derivative::Derivative,
     itermore::{
         IterArrayChunks as _,
         IterArrayWindows as _,
@@ -26,4 +30,5 @@ pub use {
         regex_is_match,
     },
     serde::Deserialize,
+    wheel::traits::ResultNeverExt as _,
 };
