@@ -23,7 +23,10 @@ pub use {
         IterArrayChunks as _,
         IterArrayWindows as _,
     },
-    itertools::Itertools as _,
+    itertools::{
+        self,
+        Itertools as _,
+    },
     lazy_regex::{
         self,
         regex_captures,
