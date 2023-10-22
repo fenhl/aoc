@@ -84,6 +84,7 @@ dependencies = [
  "itertools",
  "lazy-regex",
  "serde",
+ "serde_json",
  "wheel",
 ]
 

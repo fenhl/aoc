@@ -33,5 +33,9 @@ pub use {
         regex_is_match,
     },
     serde::Deserialize,
+    serde_json::{
+        self,
+        Value as Json,
+    },
     wheel::traits::ResultNeverExt as _,
 };
