@@ -19,7 +19,7 @@ This repository contains my solutions to some of the [Advent of Code](https://ad
 |Day 13|                |                |                |                |                |&#x2B50;        |                |                |                |
 |Day 14|&#x2B50;&#x2B50;|                |                |                |                |                |                |                |                |
 |Day 15|                |                |                |                |                |                |                |                |                |
-|Day 16|                |                |                |                |                |                |                |                |                |
+|Day 16|&#x2B50;&#x2B50;|                |                |                |                |                |                |                |                |
 |Day 17|                |                |                |                |                |                |                |                |                |
 |Day 18|                |                |                |                |                |                |                |                |                |
 |Day 19|                |                |                |                |                |                |                |                |                |
