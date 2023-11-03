@@ -21,7 +21,7 @@ This repository contains my solutions to some of the [Advent of Code](https://ad
 |Day 15|                |                |                |                |                |                |                |                |                |
 |Day 16|&#x2B50;&#x2B50;|                |                |                |                |                |                |                |                |
 |Day 17|                |                |                |                |                |                |                |                |                |
-|Day 18|                |                |                |                |                |                |                |                |                |
+|Day 18|&#x2B50;&#x2B50;|                |                |                |                |                |                |                |                |
 |Day 19|                |                |                |                |                |                |                |                |                |
 |Day 20|                |                |                |                |                |                |                |                |                |
 |Day 21|                |                |                |                |                |                |                |                |                |
