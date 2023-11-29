@@ -22,6 +22,7 @@ pub use {
     itermore::{
         IterArrayChunks as _,
         IterArrayWindows as _,
+        IterCircularArrayWindows as _,
     },
     itertools::{
         self,

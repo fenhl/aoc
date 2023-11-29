@@ -15,7 +15,7 @@ fn gen(input: &str) -> HashMap<String, HashMap<String, i32>> {
 fn part1(input: &HashMap<String, HashMap<String, i32>>) -> i32 {
     input.keys()
         .permutations(input.len())
-        .map(|perm| perm.into_iter().circular_tuple_windows().map(|(a, b)| input[a][b] + input[b][a]).sum())
+        .map(|perm| perm.into_iter().circular_array_windows().map(|[a, b]| input[a][b] + input[b][a]).sum())
         .max().unwrap()
 }
 

@@ -75,8 +75,8 @@ fn part1(input: &[u32]) -> u32 {
     let (num_ones, num_threes) = iter::once(0)
         .chain(ratings)
         .chain(iter::once(device_rating))
-        .tuple_windows()
-        .fold((0, 0), |(num_ones, num_threes), (first, second)| match second - first {
+        .array_windows()
+        .fold((0, 0), |(num_ones, num_threes), [first, second]| match second - first {
             1 => (num_ones + 1, num_threes),
             3 => (num_ones, num_threes + 1),
             _ => (num_ones, num_threes),

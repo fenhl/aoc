@@ -11,7 +11,7 @@ fn gen(input: &str) -> Vec<[u32; 3]> {
 fn part1(input: &[[u32; 3]]) -> u32 {
     input.iter()
         .map(|dims| {
-            let sides = dims.iter().circular_tuple_windows().map(|(a, b)| a * b).collect_vec();
+            let sides = dims.iter().circular_array_windows().map(|[a, b]| a * b).collect_vec();
             2 * sides.iter().sum::<u32>() + sides.iter().min().unwrap()
         })
         .sum()
@@ -21,7 +21,7 @@ fn part1(input: &[[u32; 3]]) -> u32 {
 fn part2(input: &[[u32; 3]]) -> u32 {
     input.iter()
         .map(|dims| {
-            let perimeters = dims.iter().circular_tuple_windows().map(|(a, b)| 2 * (a + b)).collect_vec();
+            let perimeters = dims.iter().circular_array_windows().map(|[a, b]| 2 * (a + b)).collect_vec();
             perimeters.iter().min().unwrap() + dims.iter().product::<u32>()
         })
         .sum()

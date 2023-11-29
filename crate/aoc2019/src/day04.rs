@@ -27,8 +27,8 @@ impl Error for GenError {}
 fn valid_a(password: u32) -> bool {
     let digits = password.to_string().chars().map(|c| c.to_digit(10).unwrap()).collect::<Vec<_>>();
     digits.len() == 6
-    && digits.iter().tuple_windows().any(|(d1, d2)| d1 == d2)
-    && digits.iter().tuple_windows().all(|(d1, d2)| d1 <= d2)
+    && digits.iter().array_windows().any(|[d1, d2]| d1 == d2)
+    && digits.iter().array_windows().all(|[d1, d2]| d1 <= d2)
 }
 
 fn valid_b(password: u32) -> bool {

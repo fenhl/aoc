@@ -7,7 +7,7 @@ fn gen(input: &str) -> Vec<u32> {
 
 #[aoc(day1, part1)]
 fn part1(input: &[u32]) -> u32 {
-    input.iter().circular_tuple_windows().filter(|(a, b)| a == b).map(|(a, _)| a).sum()
+    input.iter().circular_array_windows().filter(|[a, b]| a == b).map(|[a, _]| a).sum()
 }
 
 #[aoc(day1, part2)]
