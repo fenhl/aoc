@@ -5,6 +5,16 @@ authors = ["Fenhl <fenhl@fenhl.net>"]
 edition = "2021"
 publish = false
 
+[lints.rust]
+rust_2018_idioms = "deny"
+unsafe_code = "forbid"
+unused = "deny"
+unused_crate_dependencies = "deny"
+unused_import_braces = "deny"
+unused_lifetimes = "deny"
+unused_qualifications = "deny"
+warnings = "deny"
+
 [dependencies]
 aoc = { version = "0.1.0", path = "../aoc" }
 aoc-runner = "0.3.0"
