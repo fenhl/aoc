@@ -23,7 +23,7 @@ fn gen(input: &str) -> Vec<String> {
 
 #[aoc(day1, part1)]
 fn part1(input: &[String]) -> u32 {
-    input.iter()
+    input.par_iter()
         .map(|line| {
             let digits = line.chars().filter_map(|c| c.to_digit(10)).collect_vec();
             let tens = *digits.first().unwrap();
@@ -35,7 +35,7 @@ fn part1(input: &[String]) -> u32 {
 
 #[aoc(day1, part2)]
 fn part2(input: &[String]) -> u32 {
-    input.iter()
+    input.par_iter()
         .map(|line| {
             let first = regex_find!("[0-9]|one|two|three|four|five|six|seven|eight|nine", line).unwrap();
             let (_, last) = regex_captures!(".*([0-9]|one|two|three|four|five|six|seven|eight|nine)", line).unwrap();
