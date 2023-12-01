@@ -31,6 +31,7 @@ pub use {
     lazy_regex::{
         self,
         regex_captures,
+        regex_find,
         regex_is_match,
     },
     serde::Deserialize,
