@@ -8,7 +8,7 @@ publish = false
 chrono = { version = "0.4.31", default-features = false, features = ["clock", "std"] }
 collect-mac = "0.1.0"
 derivative = "2.2.0"
-itermore = { version = "0.6", default-features = false, features = ["array_chunks", "array_windows", "circular_array_windows"] }
+itermore = { version = "0.6", default-features = false, features = ["array_chunks", "array_combinations", "array_windows", "circular_array_windows"] }
 itertools = "0.12"
 lazy-regex = "3.0.2"
 rayon = "1.8.0"

@@ -26,6 +26,7 @@ pub use {
     derivative::Derivative,
     itermore::{
         IterArrayChunks as _,
+        IterArrayCombinations as _,
         IterArrayWindows as _,
         IterCircularArrayWindows as _,
     },
